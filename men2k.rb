@@ -38,8 +38,8 @@ class Men2K
     n.times do
       row, column = @i.divmod(@columns)
       row %= @rows
-      x = @margin_left + @card_width * column
-      y = @margin_top + @card_height * row
+      x = @margin_left + (@card_width+@horizontal_margin) * column
+      y = @margin_top + (@card_height+@vertical_margin) * row
       @context.save do
         @context.translate(x, y)
         if (@rotate_even_rows && row % 2 == 1) ||
@@ -63,11 +63,18 @@ class Men2K
     @width, @height = 210.mm, 297.mm
   end
   def card_2_5
-    @margin_left, @margin_top = 14.mm, 11.mm
-    @card_width, @card_height = 91.mm, 55.mm
     @columns, @rows = 2, 5
+    @card_width, @card_height = 91.mm, 55.mm
+    @margin_left, @margin_top = 14.mm, 11.mm
     @vertical_margin = @horizontal_margin = 0
-    @margin_top -= 1.5.mm
+  end
+  def card_2_4
+    # A-one F8A4-1
+    @columns, @rows = 2, 4
+    @card_width, @card_height = 91.mm, 55.mm
+    @margin_left, @margin_top = 15.mm, 25.mm
+    @horizontal_margin = 8.mm
+    @vertical_margin = 9.mm
   end
   def show_page
     trim_mark
