@@ -35,17 +35,20 @@ class Men2K
   def draw_page(input, n=cards_in_a_page)
     @card = Poppler::Document.new(input)
     page = @card[0]
+    # 塗り足しの大きさ
+    card_offset_x = ((page.crop_box.x2 - page.crop_box.x1) - @card_width) / 2
+    card_offset_y = ((page.crop_box.y2 - page.crop_box.y1) - @card_height) / 2
     n.times do
       row, column = @i.divmod(@columns)
       row %= @rows
       x = @margin_left + (@card_width+@horizontal_margin) * column
       y = @margin_top + (@card_height+@vertical_margin) * row
       @context.save do
-        @context.translate(x, y)
+        @context.translate(x-card_offset_x, y-card_offset_y)
         if (@rotate_even_rows && row % 2 == 1) ||
            (@rotate_even_columns && column % 2 == 1 )
           @context.rotate(Math::PI)
-          @context.translate(-@card_width, -@card_height)
+          @context.translate(-@card_width-card_offset_x*2, -@card_height-card_offset_y*2)
         end
         @context.render_poppler_page(page)
       end
